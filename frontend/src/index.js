@@ -14,14 +14,35 @@ const FlightCollisionCalculator = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Logic to calculate flight collision goes here
-    console.log({
+    
+    // Prepare the data to be sent
+    const data = {
       coordinates1,
       planeSpeed,
       flightRadius,
-    });
+    };
+
+    try {
+      // Send the data to the server
+      const response = await fetch('http://localhost:1212/api/calculate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log(result); // Handle the response from the server
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
   };
 
   return (
