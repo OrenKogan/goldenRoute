@@ -1,6 +1,5 @@
 const express = require('express');
-//const fetch = require('node-fetch');
-const axios = require('axios');
+const geolib = require('geolib');
 
 const app = express();
 const openaipAPI = "ef8bfd4669b7d18735a6f0b44fd42d55"
@@ -17,28 +16,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => {
-    res.send('How did we get here?'); //funny minecraft refrence
-});
 
-
-function haversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius of the Earth in kilometers
-    const dLat = (lat2 - lat1) * (Math.PI / 180);
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in kilometers
-    return distance;
-}
 
 function calcNearest(l_lat, l_lon, _radius, flights) {
     let nearestFlight = null;
     let minDistance = Infinity;
+    let distance = 0;
 
     // Loop through all flights
     for (let flight of flights) {
@@ -46,13 +29,15 @@ function calcNearest(l_lat, l_lon, _radius, flights) {
         const flightLon = flight[5];
 
         // Calculate distance between the given coordinates and the flight's coordinates
-        const distance = haversineDistance(l_lat, l_lon, flightLat, flightLon);
+        distance = geolib.getDistance({latitude: l_lat, longitude: l_lon}, {latitude: flightLat, longitude: flightLon}); 
         // Check if the flight is within the specified radius
-        if (distance <= _radius && distance < minDistance) {
+        if (distance <= _radius*1000 && distance < minDistance) {
             nearestFlight = flight;
             minDistance = distance;
         }
     }
+    if (nearestFlight)
+        nearestFlight.push(distance/1000);
     return nearestFlight;
 }
 
@@ -93,7 +78,6 @@ app.post('/api/calculate', async (req, res) => {
     const formatCoordinate = (coordinate) => Number(coordinate).toFixed(6);
 
     const url = `https://opensky-network.org/api/states/all?lamin=${formatCoordinate(coordinates1.lat - kmToDegreesLatitude)}&lomin=${formatCoordinate(coordinates1.lng - kmToDegreesLongitude)}&lamax=${Number(coordinates1.lat) + Number(kmToDegreesLatitude)}&lomax=${Number(coordinates1.lng) + Number(kmToDegreesLongitude)}`;
-    console.log(url);
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -115,8 +99,25 @@ app.post('/api/calculate', async (req, res) => {
 
     //res.json({ message: 'msg from server' });
 });
+
+app.post('/api/time-until-contact', (req, res) => {
+    const { distance, speed } = req.body;
+    console.log({distance, speed});
+
+    // Validate inputs
+    if (typeof distance !== 'number' || typeof speed !== 'number' || speed <= 0) {
+        return res.status(400).json({ error: 'Invalid distance or speed. Ensure they are numbers and speed is greater than zero.' });
+    }
+
+    // Calculate time until contact
+    const timeUntilContact = distance / speed; // Time in hours
+
+    // Send the result
+    res.json({ timeUntilContact });
+});
+
 const port = process.env.PORT || 1212
 
-app.listen(1212, () => {
+app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

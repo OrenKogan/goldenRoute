@@ -43,11 +43,15 @@ const AttackInputs = ({ onInputChange }) => {
     };
 
     const CustomHelperText = styled('p')(({ theme }) => ({
-        fontSize: '1rem', 
+        fontSize: '1rem',
         color: theme.palette.error.main,
         fontWeight: 500,
         fontFamily: 'Arial, sans-serif',
     }));
+
+    const _style = {
+        backgroundColor: 'rgba(128, 128, 128, 0.5)', // Grayish with some opacity
+    };
 
     const handleInputChange = (event, setter) => {
         const { name, value } = event.target;
@@ -60,6 +64,7 @@ const AttackInputs = ({ onInputChange }) => {
     return (
         <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', padding: '20px' }}>
             <TextField
+                style={_style}
                 id="latitude"
                 label="Latitude"
                 variant="outlined"
@@ -68,8 +73,9 @@ const AttackInputs = ({ onInputChange }) => {
                 onChange={(e) => handleInputChange(e, setLatitude)}
                 error={!!errors.latitude}
                 helperText={errors.latitude && <CustomHelperText>{errors.latitude}</CustomHelperText>}
-                />
+            />
             <TextField
+                style={_style}
                 id="longitude"
                 label="Longitude"
                 variant="outlined"
@@ -78,8 +84,9 @@ const AttackInputs = ({ onInputChange }) => {
                 onChange={(e) => handleInputChange(e, setLongitude)}
                 error={!!errors.longitude}
                 helperText={errors.longitude && <CustomHelperText>{errors.longitude}</CustomHelperText>}
-                />
+            />
             <TextField
+                style={_style}
                 id="speed"
                 label="Speed"
                 variant="outlined"
@@ -88,8 +95,9 @@ const AttackInputs = ({ onInputChange }) => {
                 onChange={(e) => handleInputChange(e, setSpeed)}
                 error={!!errors.speed}
                 helperText={errors.speed && <CustomHelperText>{errors.speed}</CustomHelperText>}
-                />
+            />
             <TextField
+                style={_style}
                 id="radius"
                 label="Radius"
                 variant="outlined"
@@ -98,7 +106,7 @@ const AttackInputs = ({ onInputChange }) => {
                 onChange={(e) => handleInputChange(e, setRadius)}
                 error={!!errors.radius}
                 helperText={errors.radius && <CustomHelperText>{errors.radius}</CustomHelperText>}
-                />
+            />
         </div>
     );
 };

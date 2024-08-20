@@ -40,6 +40,7 @@ const FlightInfoPopup = ({ flightData }) => {
             <PopupText><strong>Origin Country:</strong> {flightData[2]}</PopupText>
             <PopupText><strong>Last Contact:</strong> {formatDate(flightData[4])}</PopupText>
             <PopupText><strong>On Ground:</strong> {flightData[8] ? 'Yes' : 'No'}</PopupText>
+            <PopupText><strong>Closest Airport:</strong> {flightData[18]}</PopupText>
         </PopupContainer>
     );
 };
