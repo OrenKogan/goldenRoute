@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
+import App from './App';
 
 const FlightCollisionCalculator = () => {
   const [coordinates1, setCoordinates1] = useState({ lat: '', lng: '' });
   const [planeSpeed, setPlaneSpeed] = useState('');
   const [flightRadius, setFlightRadius] = useState('');
+
+  useEffect(() => {
+    if (coordinates1.lat && coordinates1.lng && planeSpeed && flightRadius) {
+      calculateCollision();
+    }
+  }, [coordinates1, planeSpeed, flightRadius]);
 
   const handleInputChange = (event, setFunction) => {
     const { name, value } = event.target;
@@ -14,9 +21,7 @@ const FlightCollisionCalculator = () => {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
+  const calculateCollision = async () => {
     // Prepare the data to be sent
     const data = {
       coordinates1,
@@ -46,7 +51,7 @@ const FlightCollisionCalculator = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div>
         <label>Coordinate 1 (Latitude):</label>
         <input
@@ -72,7 +77,10 @@ const FlightCollisionCalculator = () => {
         <input
           type="number"
           value={planeSpeed}
-          onChange={(e) => setPlaneSpeed(e.target.value)}
+          onChange={(e) => {
+            setPlaneSpeed(e.target.value);
+            calculateCollision();
+          }}
           placeholder="Speed"
           required
         />
@@ -82,15 +90,19 @@ const FlightCollisionCalculator = () => {
         <input
           type="number"
           value={flightRadius}
-          onChange={(e) => setFlightRadius(e.target.value)}
+          onChange={(e) => {
+            setFlightRadius(e.target.value);
+            calculateCollision();
+          }}
           placeholder="Radius"
           required
         />
       </div>
-      <button type="submit">Calculate Collision</button>
     </form>
   );
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<FlightCollisionCalculator />);
+root.render(
+    <App />
+);//<FlightCollisionCalculator />);

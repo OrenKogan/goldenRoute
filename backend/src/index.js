@@ -53,7 +53,6 @@ function calcNearest(l_lat, l_lon, _radius, flights) {
             minDistance = distance;
         }
     }
-
     return nearestFlight;
 }
 
@@ -81,7 +80,7 @@ async function getNearestAirport(lat, lon) {
 
 app.post('/api/calculate', async (req, res) => {
     const { coordinates1, planeSpeed, flightRadius } = req.body;
-    console.log({ coordinates1, planeSpeed, flightRadius });
+    //console.log({ coordinates1, planeSpeed, flightRadius });
 
     if (!coordinates1.lat || !coordinates1.lng) {
         return res.status(400).json({ error: 'Latitude and longitude are required.' });
@@ -93,16 +92,19 @@ app.post('/api/calculate', async (req, res) => {
     // Convert formatted string back to number for calculation
     const formatCoordinate = (coordinate) => Number(coordinate).toFixed(6);
 
-    //console.log(formatCoordinate(coordinates1.lat - kmToDegreesLatitude), formatCoordinate(coordinates1.lng - kmToDegreesLongitude), Number(coordinates1.lat) + Number(kmToDegreesLatitude), Number(coordinates1.lng) + Number(kmToDegreesLongitude));
     const url = `https://opensky-network.org/api/states/all?lamin=${formatCoordinate(coordinates1.lat - kmToDegreesLatitude)}&lomin=${formatCoordinate(coordinates1.lng - kmToDegreesLongitude)}&lamax=${Number(coordinates1.lat) + Number(kmToDegreesLatitude)}&lomax=${Number(coordinates1.lng) + Number(kmToDegreesLongitude)}`;
-
+    console.log(url);
     try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        if (!data.states)
+            throw 'No Flights Nearby.';
         f = calcNearest(coordinates1.lat, coordinates1.lng, flightRadius, data.states);
+        if (!f)
+            throw 'No Flights Nearby.';
         nearestAirport = await getNearestAirport(f[6], f[5]);
         f.push(nearestAirport);
         res.json(f);
