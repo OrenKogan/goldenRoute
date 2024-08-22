@@ -34,7 +34,7 @@ const FlightInfoPopup = ({ flightData }) => {
 
     return (
         <PopupContainer>
-            <PopupTitle>Flight Information</PopupTitle>
+            <PopupTitle>Friendly Flight Information</PopupTitle>
             <PopupText><strong>ICAO24:</strong> {flightData.ICAO24}</PopupText>
             <PopupText><strong>Callsign:</strong> {flightData.Callsign}</PopupText>
             <PopupText><strong>Origin Country:</strong> {flightData.OriginCountry}</PopupText>

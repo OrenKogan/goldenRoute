@@ -10,16 +10,18 @@ import { Button } from '@mui/material';
 import LoadButton from './components/LoadAttack';
 
 const formatFlightData = (data) => {
+    console.log(data);
     let flightData = {}
     flightData.ICAO24 = data[0];
     flightData.Callsign = data[1].trim();
     flightData.OriginCountry = data[2];
     flightData.LastContact = data[4];
     flightData.OnGround = data[8];
-    flightData.Closest_Airport = [18];
+    flightData.Closest_Airport = data[18];
     flightData.Latitude = data[6];
     flightData.Longitude = data[5];
 
+    console.log(flightData);
     return flightData;
 }
 
@@ -132,14 +134,14 @@ const App = () => {
 
             const friendlyPlane = flightData
                 ? {
-                    ICAO24: flightData[0],
-                    Callsign: flightData[1].trim(),
-                    OriginCountry: flightData[2],
-                    LastContact: flightData[4],
-                    OnGround: flightData[8],
-                    ClosestAirport: flightData[18],
-                    Latitude: flightData[6],
-                    Longitude: flightData[5]
+                    ICAO24: flightData.ICAO24,
+                    Callsign: flightData.Callsign,
+                    OriginCountry: flightData.OriginCountry,
+                    LastContact: flightData.LastContact,
+                    OnGround: flightData.OnGround,
+                    ClosestAirport: flightData.Closest_Airport,
+                    Latitude: flightData.Latitude,
+                    Longitude: flightData.Longitude
                 }
                 : {};
 
@@ -155,7 +157,7 @@ const App = () => {
                 const result = await response.json();
                 console.log(result);
                 if (!response.ok || !result.success) {
-                    setErrorMessages(["No Friendly Flight Nearby"]);//result.error || ['Failed to save attack data']);
+                    setErrorMessages(result.error || ['Failed to save attack data']); //["No Friendly Flight Nearby"]);//
                     return;
                 }
 

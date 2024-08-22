@@ -57,6 +57,7 @@ async function saveAttackData(attacker, friendlyPlane) {
 
     try {
         // Create a new Friendly record
+        console.log(friendlyPlane);
         const friendly = await prisma.friendly.create({
             data: {
                 Latitude: friendlyPlane.Latitude,
