@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, styled } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
+import UploadIcon from '@mui/icons-material/Upload';
 
 const StyledButton = styled(Button)({
     backgroundColor: 'rgba(128, 128, 128, 0.5)', // Grayish with some opacity
@@ -12,18 +12,21 @@ const StyledButton = styled(Button)({
     '&:hover': {
         backgroundColor: '#1565c0',
     },
+    position: 'absolute',
+    right: '4%', // Align to the right with some margin
+    top: '50%', // Center vertically relative to the container
+    transform: 'translateY(-50%)' // Center vertically
 });
 
-const SaveButton = ({ onSave, disabled }) => {
+const LoadButton = ({ handleLoad }) => {
     return (
         <StyledButton
-            disabled={disabled}
-            onClick={onSave}
-            endIcon={<SaveIcon />}
+            onClick={handleLoad}
+            endIcon={<UploadIcon />}
         >
-            Save Data
+            Load Attack
         </StyledButton>
     );
 };
 
-export default SaveButton;
+export default LoadButton;

@@ -7,6 +7,21 @@ import SaveButton from './components/SaveData';
 import DataModal from './components/dataModal/dataModal';
 import './App.css'
 import { Button } from '@mui/material';
+import LoadButton from './components/LoadAttack';
+
+const formatFlightData = (data) => {
+    let flightData = {}
+    flightData.ICAO24 = data[0];
+    flightData.Callsign = data[1].trim();
+    flightData.OriginCountry = data[2];
+    flightData.LastContact = data[4];
+    flightData.OnGround = data[8];
+    flightData.Closest_Airport = [18];
+    flightData.Latitude = data[6];
+    flightData.Longitude = data[5];
+
+    return flightData;
+}
 
 const App = () => {
     const [inputs, setInputs] = useState({
@@ -78,7 +93,7 @@ const App = () => {
                     }
 
                     const data = await response.json();
-                    setFlightData(data);
+                    setFlightData(formatFlightData(data));
                     const timeResponse = await fetch('http://localhost:1212/api/time-until-contact', {
                         method: 'POST',
                         headers: {
@@ -107,14 +122,14 @@ const App = () => {
     }, [inputs]);
 
     const handleSave = async () => {
-        if(!isButtonDisabled){
+        if (!isButtonDisabled) {
             const attacker = {
                 latitude: parseFloat(inputs.latitude),
                 longitude: parseFloat(inputs.longitude),
                 speed: parseFloat(inputs.speed),
                 radius: parseFloat(inputs.radius),
             };
-    
+
             const friendlyPlane = flightData
                 ? {
                     ICAO24: flightData[0],
@@ -127,7 +142,7 @@ const App = () => {
                     Longitude: flightData[5]
                 }
                 : {};
-    
+
             try {
                 const response = await fetch('http://localhost:1212/api/saveAttack', {
                     method: 'POST',
@@ -136,14 +151,14 @@ const App = () => {
                     },
                     body: JSON.stringify({ attacker, friendlyPlane }),
                 });
-    
+
                 const result = await response.json();
                 console.log(result);
                 if (!response.ok || !result.success) {
                     setErrorMessages(["No Friendly Flight Nearby"]);//result.error || ['Failed to save attack data']);
                     return;
                 }
-    
+
                 setErrorMessages([]); // Clear errors if successful
             } catch (error) {
                 console.error('Error saving attack data:', error);
@@ -152,7 +167,7 @@ const App = () => {
         }
     };
 
-    const HandleFetchBtnClick = () =>{
+    const HandleFetchBtnClick = () => {
         if (!isFetchOpen)
             fetchAttackData();
         setIsFetchOpen(!isFetchOpen);
@@ -181,7 +196,7 @@ const App = () => {
             if (!response.ok) throw new Error('Failed to fetch data');
             const data = await response.json();
             console.log(data);
-            //setFlightData(data);
+            setFlightData(data);
         } catch (error) {
             console.error('Error fetching table data:', error);
         }
@@ -192,16 +207,27 @@ const App = () => {
         fetchFriendlyOfAttackData(friendlyId);
     };
 
+    const handleLoadAttack = (row) => {
+        setInputs({
+            latitude: row.latitude,
+            longitude: row.longitude,
+            speed: row.speed,
+            radius: row.radius
+        });
+
+        HandleFetchBtnClick();
+    }
+
 
     return (
         <div style={{ position: 'relative', height: '100vh', width: '100vw', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
                 <h1 style={{ margin: '0 20px' }}>Attack Predictor</h1>
                 <div style={{ display: 'flex', gap: '20px', flex: '1 1 auto', justifyContent: 'center', alignItems: 'center' }}>
-                    <AttackInputs onInputChange={handleInputChange} handleButton={handleSaveButtonLogic}/>
+                    <AttackInputs onInputChange={handleInputChange} handleButton={handleSaveButtonLogic} />
                     <SaveButton onSave={handleSave} style={{ height: '100%' }} disabled={isButtonDisabled} />
                 </div>
-                <Button onClick={HandleFetchBtnClick}>Load Attack</Button>
+                <LoadButton handleLoad={HandleFetchBtnClick} />
             </div>
             {errorMessages.length > 0 && (
                 <div style={{ position: 'absolute', top: '100px', left: '50%', transform: 'translateX(-50%)', backgroundColor: 'red', color: 'white', padding: '10px', borderRadius: '5px', zIndex: 1100 }}>
@@ -214,8 +240,8 @@ const App = () => {
             )}
             <TimeUntilContactPopup timeUntilContact={timeUntilContact} />
             <MapComp inputs={inputs} flightData={flightData} onLocationSelect={handleLocationSelect} />
+            <DataModal isOpen={isFetchOpen} attacksData={attacksData} closeHandle={HandleFetchBtnClick} setFlightData={handleAttackDataHover} setAttack={handleLoadAttack} />
             <FlightInfoPopup flightData={flightData} />
-            <DataModal isOpen={isFetchOpen} attacksData={attacksData} closeHandle={HandleFetchBtnClick} setFlightData={handleAttackDataHover}/>
         </div>
     );
 };

@@ -34,8 +34,8 @@ const MapComp = ({ inputs, flightData, onLocationSelect  }) => {
     const zoom = hasValidInput ? 9 : 2;
     
     const greenPlaneCoordinates = flightData ? {
-        lat: flightData[6],
-        lng: flightData[5],
+        lat: flightData.Latitude,
+        lng: flightData.Longitude,
     } : null;
 
     const MapClickHandler = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import './dataModal.css'
 
-const DataModal = ({ isOpen, attacksData, closeHandle, setFlightData}) => {
+const DataModal = ({ isOpen, attacksData, closeHandle, setFlightData, setAttack}) => {
     if (!isOpen) return null;
     return (
         <div className="modal-overlay">
@@ -20,7 +20,7 @@ const DataModal = ({ isOpen, attacksData, closeHandle, setFlightData}) => {
                     </thead>
                     <tbody>
                         {attacksData.map((row, index) => (
-                            <tr key={index} onMouseOver={() => setFlightData(row.friendlyId)}>
+                            <tr key={index} onMouseOver={() => setFlightData(row.friendlyId)} onClick={() => setAttack(row)}>
                                 <td>{row.id}</td>
                                 <td>{row.latitude}</td>
                                 <td>{row.longitude}</td>
