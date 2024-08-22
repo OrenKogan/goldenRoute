@@ -1,6 +1,8 @@
+//import {AddAttack} from "./DatabaseComminicator.js"
+
 const express = require('express');
 const geolib = require('geolib');
-
+const saveAttackData = require('./DatabaseComminicator.js')
 const app = express();
 const openaipAPI = "ef8bfd4669b7d18735a6f0b44fd42d55"
 
@@ -29,15 +31,15 @@ function calcNearest(l_lat, l_lon, _radius, flights) {
         const flightLon = flight[5];
 
         // Calculate distance between the given coordinates and the flight's coordinates
-        distance = geolib.getDistance({latitude: l_lat, longitude: l_lon}, {latitude: flightLat, longitude: flightLon}); 
+        distance = geolib.getDistance({ latitude: l_lat, longitude: l_lon }, { latitude: flightLat, longitude: flightLon });
         // Check if the flight is within the specified radius
-        if (distance <= _radius*1000 && distance < minDistance) {
+        if (distance <= _radius * 1000 && distance < minDistance) {
             nearestFlight = flight;
             minDistance = distance;
         }
     }
     if (nearestFlight)
-        nearestFlight.push(distance/1000);
+        nearestFlight.push(distance / 1000);
     return nearestFlight;
 }
 
@@ -102,7 +104,7 @@ app.post('/api/calculate', async (req, res) => {
 
 app.post('/api/time-until-contact', (req, res) => {
     const { distance, speed } = req.body;
-    console.log({distance, speed});
+    console.log({ distance, speed });
 
     // Validate inputs
     if (typeof distance !== 'number' || typeof speed !== 'number' || speed <= 0) {
@@ -116,6 +118,23 @@ app.post('/api/time-until-contact', (req, res) => {
     res.json({ timeUntilContact });
 });
 
+app.post('/api/saveAttack', async (req, res) => {
+    const { attacker, friendlyPlane } = req.body;
+
+    console.log({ attacker, friendlyPlane })
+    try {
+        const result = await saveAttackData(attacker, friendlyPlane);
+        if (result.success) {
+            res.status(200).json(result);
+        } else {
+            console.log(result);
+            res.status(500).json({ error: result.errors });
+        }
+    } catch (error) {
+        console.error('Error saving Attack:', error);
+        res.status(500).json({ error: 'Failed to to save attack.' });
+    }
+});
 const port = process.env.PORT || 1212
 
 app.listen(port, () => {
