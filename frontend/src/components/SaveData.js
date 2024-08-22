@@ -15,9 +15,10 @@ const StyledButton = styled(Button)({
     },
 });
 
-const SaveButton = ({ onSave }) => {
+const SaveButton = ({ onSave, disabled }) => {
     return (
         <StyledButton
+            disabled={disabled}
             onClick={onSave}
             endIcon={<SaveIcon />}
         >

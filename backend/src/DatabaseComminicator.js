@@ -15,7 +15,7 @@ function validateInputs(attacker, friendlyPlane) {
     if (typeof attacker.speed !== 'number' || isNaN(attacker.speed) || attacker.speed <= 0) {
         errors.push('Invalid attacker speed');
     }
-    if (isNaN(attacker.radius) || Number(attacker.radius) <= 0) {
+    if (typeof attacker.radius !== 'number' || isNaN(attacker.radius) || attacker.radius <= 0) {
         errors.push('Invalid attacker radius');
     }
 

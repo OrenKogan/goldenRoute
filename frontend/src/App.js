@@ -17,6 +17,7 @@ const App = () => {
     const [flightData, setFlightData] = useState(null);
     const [timeUntilContact, setTime] = useState(null);
     const [errorMessages, setErrorMessages] = useState([]);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
     const handleInputChange = (name, value) => {
         setInputs((prev) => ({
@@ -33,11 +34,25 @@ const App = () => {
         }));
     };
 
+    const validateInputs = () => {
+        const { latitude, longitude, speed, radius } = inputs;
+        return (
+            latitude >= -90 && latitude <= 90 &&
+            longitude >= -180 && longitude <= 180 &&
+            speed > 0 &&
+            radius > 0
+        );
+    };
+
+    const handleButtonLogic = (isValid) => {
+        setIsButtonDisabled(!isValid);
+    }
+
     useEffect(() => {
         const { latitude, longitude, speed, radius } = inputs;
-
+        setIsButtonDisabled(!validateInputs());
         // Only send the request if all required inputs are present and valid
-        if (latitude && longitude && radius) {
+        if (latitude && longitude && radius && speed) {
             const fetchFlightData = async () => {
                 try {
                     const response = await fetch('http://localhost:1212/api/calculate', {
@@ -88,46 +103,48 @@ const App = () => {
     }, [inputs]);
 
     const handleSave = async () => {
-        const attacker = {
-            latitude: inputs.latitude,
-            longitude: inputs.longitude,
-            speed: inputs.speed,
-            radius: inputs.radius,
-        };
-
-        const friendlyPlane = flightData
-            ? {
-                ICAO24: flightData[0],
-                Callsign: flightData[1].trim(),
-                OriginCountry: flightData[2],
-                LastContact: flightData[4],
-                OnGround: flightData[8],
-                ClosestAirport: flightData[18],
-                Latitude: flightData[6],
-                Longitude: flightData[5]
+        if(!isButtonDisabled){
+            const attacker = {
+                latitude: parseFloat(inputs.latitude),
+                longitude: parseFloat(inputs.longitude),
+                speed: parseFloat(inputs.speed),
+                radius: parseFloat(inputs.radius),
+            };
+    
+            const friendlyPlane = flightData
+                ? {
+                    ICAO24: flightData[0],
+                    Callsign: flightData[1].trim(),
+                    OriginCountry: flightData[2],
+                    LastContact: flightData[4],
+                    OnGround: flightData[8],
+                    ClosestAirport: flightData[18],
+                    Latitude: flightData[6],
+                    Longitude: flightData[5]
+                }
+                : {};
+    
+            try {
+                const response = await fetch('http://localhost:1212/api/saveAttack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ attacker, friendlyPlane }),
+                });
+    
+                const result = await response.json();
+                console.log(result);
+                if (!response.ok || !result.success) {
+                    setErrorMessages(["No Friendly Flight Nearby"]);//result.error || ['Failed to save attack data']);
+                    return;
+                }
+    
+                setErrorMessages([]); // Clear errors if successful
+            } catch (error) {
+                console.error('Error saving attack data:', error);
+                setErrorMessages(['An unexpected error occurred']);
             }
-            : {};
-
-        try {
-            const response = await fetch('http://localhost:1212/api/saveAttack', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ attacker, friendlyPlane }),
-            });
-
-            const result = await response.json();
-            console.log(result);
-            if (!response.ok || !result.success) {
-                setErrorMessages(result.error || ['Failed to save attack data']);
-                return;
-            }
-
-            setErrorMessages([]); // Clear errors if successful
-        } catch (error) {
-            console.error('Error saving attack data:', error);
-            setErrorMessages(['An unexpected error occurred']);
         }
     };
 
@@ -136,8 +153,8 @@ const App = () => {
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
                 <h1 style={{ margin: '0 20px' }}>Attack Predictor</h1>
                 <div style={{ display: 'flex', gap: '20px', flex: '1 1 auto', justifyContent: 'center', alignItems: 'center' }}>
-                    <AttackInputs onInputChange={handleInputChange} />
-                    <SaveButton onSave={handleSave} style={{ height: '100%' }} />
+                    <AttackInputs onInputChange={handleInputChange} handleButton={handleButtonLogic}/>
+                    <SaveButton onSave={handleSave} style={{ height: '100%' }} disabled={isButtonDisabled} />
                 </div>
             </div>
             {errorMessages.length > 0 && (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, styled } from '@mui/material';
 
-const AttackInputs = ({ onInputChange }) => {
+const AttackInputs = ({ onInputChange, handleButton }) => {
 
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
@@ -56,9 +56,11 @@ const AttackInputs = ({ onInputChange }) => {
     const handleInputChange = (event, setter) => {
         const { name, value } = event.target;
         setter(value);
-        if (validateInput(name, value)) {
+        const valid = validateInput(name, value);
+        if (valid) {
             onInputChange(name, value);
         }
+        handleButton(valid);
     };
 
     return (
