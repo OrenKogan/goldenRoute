@@ -1,8 +1,7 @@
 //import {AddAttack} from "./DatabaseComminicator.js"
-
 const express = require('express');
 const geolib = require('geolib');
-const saveAttackData = require('./DatabaseComminicator.js')
+const {saveAttackData, FetchAttackData, FetchFriendlyData} = require('./DatabaseComminicator.js')
 const app = express();
 const openaipAPI = "ef8bfd4669b7d18735a6f0b44fd42d55"
 
@@ -121,13 +120,11 @@ app.post('/api/time-until-contact', (req, res) => {
 app.post('/api/saveAttack', async (req, res) => {
     const { attacker, friendlyPlane } = req.body;
 
-    console.log({ attacker, friendlyPlane })
     try {
         const result = await saveAttackData(attacker, friendlyPlane);
         if (result.success) {
             res.status(200).json(result);
         } else {
-            console.log(result);
             res.status(500).json({ error: result.errors });
         }
     } catch (error) {
@@ -135,6 +132,36 @@ app.post('/api/saveAttack', async (req, res) => {
         res.status(500).json({ error: 'Failed to to save attack.' });
     }
 });
+
+app.get('/api/FetchAttacks', async (req, res) => {
+    try {
+        const result = await FetchAttackData();
+        if (result.success) {
+            res.status(200).json(result.data);
+        } else {
+            res.status(500).json({ error: result.errors });
+        }
+    } catch (error) {
+        console.error('Error saving Attack:', error);
+        res.status(500).json({ error: 'Failed to to save attack.' });
+    }
+});
+
+app.post('/api/FetchFriendlyOfAttack', async (req, res) => {
+    const {friendlyId} = req.body;
+    try {
+        const result = await FetchFriendlyData(friendlyId);
+        if (result.success) {
+            res.status(200).json(result.data);
+        } else {
+            res.status(500).json({ error: result.errors });
+        }
+    } catch (error) {
+        console.error('Error fetching friendly info:', error);
+        res.status(500).json({ error: 'Failed to to fetch friendly info.' });
+    }
+});
+
 const port = process.env.PORT || 1212
 
 app.listen(port, () => {

@@ -90,4 +90,28 @@ async function saveAttackData(attacker, friendlyPlane) {
     }
 }
 
-module.exports = saveAttackData;
+async function FetchAttackData() {
+    try{
+        const data = await prisma.attacks.findMany();
+        return {success: true, data: data};
+    }
+    catch (error){
+        console.error(error);
+        return {success: false, errors: error};
+    }
+}
+
+async function FetchFriendlyData(id) {
+    try{
+        const data = await prisma.friendly.findUnique({
+            where: { id: id}
+          });
+        console.log(data);
+        return {success: true, data: data};
+    }
+    catch (error){
+        console.error(error);
+        return {success: false, errors: error};
+    }
+}
+module.exports = {saveAttackData, FetchAttackData, FetchFriendlyData};
