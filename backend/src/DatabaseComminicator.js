@@ -26,14 +26,8 @@ function validateInputs(attacker, friendlyPlane) {
     if (typeof friendlyPlane.Longitude !== 'number' || isNaN(friendlyPlane.Longitude) || friendlyPlane.Longitude < -180 || friendlyPlane.Longitude > 180) {
         errors.push('Invalid friendly plane longitude');
     }
-    if (typeof friendlyPlane.Callsign !== 'string' || friendlyPlane.Callsign.trim() === '') {
-        errors.push('Invalid friendly plane callsign');
-    }
     if (typeof friendlyPlane.OriginCountry !== 'string' || friendlyPlane.OriginCountry.trim() === '') {
         errors.push('Invalid friendly plane origin country');
-    }
-    if (typeof friendlyPlane.ClosestAirport !== 'string' || friendlyPlane.ClosestAirport.trim() === '') {
-        errors.push('Invalid friendly plane closest airport');
     }
     if (typeof friendlyPlane.ICAO24 !== 'string' || friendlyPlane.ICAO24.trim() === '') {
         errors.push('Invalid friendly plane ICAO24');
