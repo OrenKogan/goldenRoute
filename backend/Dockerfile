@@ -10,9 +10,12 @@ COPY . .
 
 RUN npx prisma generate
 
+COPY wait-for-db.sh /wait-for-db.sh
+RUN chmod +x /wait-for-db.sh
+
 ENV PORT=1212
-ENV DATABASE_URL="postgresql://postgres:root@db:5432/golderRouteDB?schema=public"
+ENV DATABASE_URL=postgresql://postgres:root@db:5432/golderRouteDB?schema=public
 
 EXPOSE 1212
 
-CMD ["npm", "start" ]
+CMD [ "/wait-for-db.sh", "npm", "start" ]
