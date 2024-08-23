@@ -157,7 +157,7 @@ const App = () => {
                 const result = await response.json();
                 console.log(result);
                 if (!response.ok || !result.success) {
-                    setErrorMessages(result.error || ['Failed to save attack data']); //["No Friendly Flight Nearby"]);//
+                    setErrorMessages(["No Friendly Flight Nearby"]);//result.error || ['Failed to save attack data']); //
                     return;
                 }
 

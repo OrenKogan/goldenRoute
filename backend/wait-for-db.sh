@@ -5,4 +5,6 @@ do
   sleep 1
 done
 echo "Database is up - executing command"
+npx prisma migrate deploy
+echo "Migrations applied - starting the application"
 exec "$@"
