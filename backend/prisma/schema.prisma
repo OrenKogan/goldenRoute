@@ -31,10 +31,10 @@ model Friendly {
   Latitude        Float
   Longitude       Float
   ICAO24          String
-  Callsign        String
+  Callsign        String?
   OriginCountry   String
   LastContact     String
   OnGround        Boolean
-  Closest_Airport String
+  Closest_Airport String?
   Attacks         Attacks[]
 }

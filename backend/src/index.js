@@ -19,10 +19,9 @@ app.use((req, res, next) => {
 
 
 
-function calcNearest(l_lat, l_lon, _radius, flights) {
+async function calcNearest(l_lat, l_lon, _radius, flights) {
     let nearestFlight = null;
     let minDistance = Infinity;
-    let distance = 0;
 
     // Loop through all flights
     for (let flight of flights) {
@@ -30,15 +29,15 @@ function calcNearest(l_lat, l_lon, _radius, flights) {
         const flightLon = flight[5];
 
         // Calculate distance between the given coordinates and the flight's coordinates
-        distance = geolib.getDistance({ latitude: l_lat, longitude: l_lon }, { latitude: flightLat, longitude: flightLon });
+        const distance = geolib.getDistance({ latitude: l_lat, longitude: l_lon }, { latitude: flightLat, longitude: flightLon });
         // Check if the flight is within the specified radius
-        if (distance <= _radius * 1000 && distance < minDistance) {
+        if (distance <= (_radius * 1000) && distance < minDistance) {
             nearestFlight = flight;
             minDistance = distance;
         }
     }
     if (nearestFlight)
-        nearestFlight.push(distance / 1000);
+        nearestFlight.push(minDistance / 1000);
     return nearestFlight;
 }
 
@@ -87,7 +86,7 @@ app.post('/api/calculate', async (req, res) => {
         const data = await response.json();
         if (!data.states)
             throw 'No Flights Nearby.';
-        f = calcNearest(coordinates1.lat, coordinates1.lng, flightRadius, data.states);
+        f = await calcNearest(coordinates1.lat, coordinates1.lng, flightRadius, data.states);
         if (!f)
             throw 'No Flights Nearby.';
         nearestAirport = await getNearestAirport(f[6], f[5]);
