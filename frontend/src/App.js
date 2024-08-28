@@ -20,6 +20,8 @@ const formatFlightData = (data) => {
     flightData.Closest_Airport = data[18];
     flightData.Latitude = data[6];
     flightData.Longitude = data[5];
+    flightData.Speed = data[9];
+    flightData.TrueDirection = data[10];
 
     console.log(flightData);
     return flightData;
@@ -96,14 +98,19 @@ const App = () => {
 
                     const data = await response.json();
                     setFlightData(formatFlightData(data));
-                    const timeResponse = await fetch('http://localhost:1212/api/time-until-contact', {
+                    const timeResponse = await fetch('http://localhost:1212/api/smartTimeCalc', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            distance: data[17],
-                            speed: Number(speed)
+                            flightLat: parseFloat(flightData.Latitude), 
+                            flightLon: parseFloat(flightData.Longitude), 
+                            flightSpeed: flightData.Speed, 
+                            missileLat: parseFloat(latitude), 
+                            missileLon: parseFloat(longitude), 
+                            missileSpeed: speed, 
+                            trueDiraction: flightData.TrueDirection
                         }),
                     });
 
@@ -112,7 +119,8 @@ const App = () => {
                     }
 
                     const timeData = await timeResponse.json();
-                    setTime(timeData.timeUntilContact);
+                    console.log(timeData);
+                    setTime(timeData.time);
 
                 } catch (error) {
                     console.error('Error fetching flight data:', error);
@@ -247,7 +255,5 @@ const App = () => {
         </div>
     );
 };
-
-//ReactDOM.render(<App />, document.getElementById('root'));
 
 export default App;
