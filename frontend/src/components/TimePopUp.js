@@ -29,14 +29,31 @@ const PopupText = styled('p')({
     fontSize: '1.5rem',
 });
 
-const formatTime = (timeInHours) => {
-    if (timeInHours < 1) {
-        const minutes = Math.round(timeInHours * 60);
-        return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
-    } else {
-        const hours = Math.floor(timeInHours);
-        const minutes = Math.round((timeInHours - hours) * 60);
+// const formatTime = (timeInHours) => {
+//     if (timeInHours < 1) {
+//         const minutes = Math.round(timeInHours * 60);
+//         return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+//     } else {
+//         const hours = Math.floor(timeInHours);
+//         const minutes = Math.round((timeInHours - hours) * 60);
+//         return `${hours} hour${hours !== 1 ? 's' : ''}${minutes > 0 ? ` and ${minutes} minute${minutes !== 1 ? 's' : ''}` : ''}`;
+//     }
+// };
+
+const formatTime = (timeInSeconds) => {
+    if (timeInSeconds === -1)
+        return "too slow";
+
+    const hours = Math.round(timeInSeconds / 3600);
+    const minutes = Math.round((timeInSeconds % 3600) / 60);
+    const seconds = Math.round(timeInSeconds % 60);
+
+    if (hours > 0) {
         return `${hours} hour${hours !== 1 ? 's' : ''}${minutes > 0 ? ` and ${minutes} minute${minutes !== 1 ? 's' : ''}` : ''}`;
+    } else if (minutes > 0) {
+        return `${minutes} minute${minutes !== 1 ? 's' : ''}${seconds > 0 ? ` and ${seconds} second${seconds !== 1 ? 's' : ''}` : ''}`;
+    } else {
+        return `${seconds} second${seconds !== 1 ? 's' : ''}`;
     }
 };
 

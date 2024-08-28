@@ -1,7 +1,7 @@
-//import {AddAttack} from "./DatabaseComminicator.js"
 const express = require('express');
 const geolib = require('geolib');
-const {saveAttackData, FetchAttackData, FetchFriendlyData} = require('./DatabaseComminicator.js')
+const { saveAttackData, FetchAttackData, FetchFriendlyData } = require('./DatabaseComminicator.js');
+const CalculateTime = require('./Calculator.js');
 const app = express();
 const openaipAPI = "ef8bfd4669b7d18735a6f0b44fd42d55"
 
@@ -100,6 +100,7 @@ app.post('/api/calculate', async (req, res) => {
     //res.json({ message: 'msg from server' });
 });
 
+//deprecated
 app.post('/api/time-until-contact', (req, res) => {
     const { distance, speed } = req.body;
     console.log({ distance, speed });
@@ -114,6 +115,19 @@ app.post('/api/time-until-contact', (req, res) => {
 
     // Send the result
     res.json({ timeUntilContact });
+});
+
+app.post('/api/smartTimeCalc', (req, res) => {
+    const { flightLat, flightLon, flightSpeed, missileLat, missileLon, missileSpeed, trueDiraction } = req.body;
+
+    time_res = CalculateTime(flightLat, flightLon, missileLat, missileLon, flightSpeed, Number(missileSpeed), trueDiraction);
+
+    if (time_res.status == "failed"){
+        res.status(500).json({erros: time_res.errors});
+    }
+
+    console.log(time_res);
+    res.json(time_res);
 });
 
 app.post('/api/saveAttack', async (req, res) => {
@@ -147,7 +161,7 @@ app.get('/api/FetchAttacks', async (req, res) => {
 });
 
 app.post('/api/FetchFriendlyOfAttack', async (req, res) => {
-    const {friendlyId} = req.body;
+    const { friendlyId } = req.body;
     try {
         const result = await FetchFriendlyData(friendlyId);
         if (result.success) {
