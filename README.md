@@ -1,11 +1,14 @@
-Welcome to my submition for the Golden Route riddle, 
+![image](https://github.com/user-attachments/assets/af25de27-5328-4839-82d7-7b55f0c41417)Welcome to my submition for the Golden Route riddle, 
+
+ 	the app is used to find the nearest threat to a missile, you will input the information of the enemy missile and will recieve the following info about the nearest flight in danger -
+  		ICAO24, Callsign, Origin Country, Last Contact, On Ground, Closest Airport
 
 Running the app - 
 
 	to run the app you simply run the next command on the base folder of the project - 
 		docker compose up --build
-    you then go into the browser and open up - 
-        localhost:3000
+    	then go into the browser and open up - 
+        	localhost:3000
 
 Working with The Attack Predictor - 
 
@@ -22,12 +25,12 @@ Working with The Attack Predictor -
 		   
 	**to select a location for the missile you are also abale to simply click on the desired location on the map and set the speed and radius using the input fields**
 	 
-How to use the app to find the best path for the missile while avoiding a certain safe zone?  (backend BONUS 2)
+**How to use the app to find the best path for the missile while avoiding a certain safe zone?**  (backend BONUS 2)
 	for this you will need to navigate using the url to  localhost:3000/safeZone
 
    **when opening this page you will see -**
 
-	 	8 input fields -
+	 	7 input fields -
    			top 4 - 
 				Latitude - Latitude of the missile
 		 		Longitude - Longitude of the missile
@@ -38,6 +41,9 @@ How to use the app to find the best path for the missile while avoiding a certai
 		 		Longitude - Longitude of the safe zone
 	   			Radius - Radius of safe zone in km
 
+**where do the flight come from?**
+	i am using the open-sky API to get the flights in the range of the missile.
+	also, to get the nearest airport i am using openaip API.
 
 	  		
 ******** BONUSES ******
@@ -47,9 +53,9 @@ How to use the app to find the best path for the missile while avoiding a certai
  	we are serching for T
 	our known parameters are =>
  		V - speed of friendly flight
-   		U - speed of missile 
+   		U - speed of enemy missile 
 	 	fX, fY  - coordinates of freindly flight
-   		mX, mY - coordinates of missile
+   		mX, mY - coordinates of enemy missile
 	 	trueDiraction - the angle of the flight from the north/ angle from the y axis to flight path
    
 	to find the time we will compare the equsions for the contact point of the missile and the flight 
@@ -91,11 +97,35 @@ How to use the app to find the best path for the missile while avoiding a certai
 
 		now that we have a more simplified equestion we will tranform the equstion to a standart quadratic formula to solve for T => ax ** 2 + bx + c
 
-  		**T** ** 2 * (V ** 2 - U ** 2) + 2 * V * (fX * cos(alpha) + fY * sin (alpha)) * **T** + fX ** 2 + fY ** 2 = 0
+  		T ** 2 * (V ** 2 - U ** 2) + 2 * V * (fX * cos(alpha) + fY * sin (alpha)) * T + fX ** 2 + fY ** 2 = 0
 
  		now we can just use the standard quadratic function to find T.
+
+   		because we rasied the equasion to the power of two we might get an additional false answer, therefor we pick the smallest valid one.
   		
 
- 		
+**BONUS 2**
+
+ 	for this part we will consider the friendly flight as stationary, we will also convert the latitude and longitude into a 2 dimantional form to be able to solve the problem.
+  	first we check if the friendly flight is inside of the safe zone, if so than the missile will not be able to hit it. same follows if the missile it self is in the safe zone.
+   	next we check if there is a need for rerouting, the missile will need rerouting if the straight line from the missile to the flight goes through the safe zone. we check this using the distance of a point 	from a straight line formula.if the distance from the middle of the safe zone to the line between the missile and flight bigger than the radius than there is no need for rerouting.
+
+	Calculaing the shortest distance - 
+ 		for this we will find two tangent to the safe zone, one from the missile and one from the flight.
+
+		here is an illustration for easier understanding - 
+  			![image](https://github.com/user-attachments/assets/b92733fd-207d-4264-9557-3e99494bd1c2)
+
+  
+      		first we find a, b and c using distance between two points formula.
+		then using the pitagoras formula we find k and n.
+
+    		next we will need to find the angle thats between the two radiuses of the deltoid( r, r, x, x), lets call that angle delta
+      		for this we find the big angle of the triangle created by a, b, c.
+		then subtract from it the two angles created by a, r, k and b, r, n. to find these angles we will use the law of cosines.
+  		
+		once we have the delta angle we divide it by 2 to find the angle in front of x in each of the congruent triangles. using the tangent in a right triangle we will find x.
+
+  		finally once adding 2 * x + k + n we get the shortest distanation that the missile need to travel.
 
 	
