@@ -1,6 +1,6 @@
 Golden Route Riddle Submission
 
-	Welcome to my submission for the Golden Route Riddle. This application is designed to identify the nearest threat to a missile by processing input data about the enemy missile and providing details about the 	closest endangered flight, including:
+	Welcome to my submission for the Golden Route Riddle. This application is designed to identify the nearest threat to a missile by processing input data about the enemy missile and providing details about the closest endangered flight, including:
 
 	- ICAO24
 	- Callsign
