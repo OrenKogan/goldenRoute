@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/af25de27-5328-4839-82d7-7b55f0c41417)Welcome to my submition for the Golden Route riddle, 
+Welcome to my submition for the Golden Route riddle, 
 
  	the app is used to find the nearest threat to a missile, you will input the information of the enemy missile and will recieve the following info about the nearest flight in danger -
   		ICAO24, Callsign, Origin Country, Last Contact, On Ground, Closest Airport
@@ -114,8 +114,7 @@ Working with The Attack Predictor -
  		for this we will find two tangent to the safe zone, one from the missile and one from the flight.
 
 		here is an illustration for easier understanding - 
-  			![image](https://github.com/user-attachments/assets/b92733fd-207d-4264-9557-3e99494bd1c2)
-
+![image](https://github.com/user-attachments/assets/af25de27-5328-4839-82d7-7b55f0c41417)
   
       		first we find a, b and c using distance between two points formula.
 		then using the pitagoras formula we find k and n.
