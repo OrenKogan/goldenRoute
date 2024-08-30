@@ -100,7 +100,8 @@ BONUS 1: Time Calculation for Missile-Flight Intersection
 
    		because we rasied the equasion to the power of two we might get an additional false answer, therefor we pick the smallest valid one.
 
-BONUS 2: Missile Rerouting to Avoid a Safe Zone
+**BONUS 2: Missile Rerouting to Avoid a Safe Zone**
+
 For rerouting, the friendly flight is considered stationary, and we convert latitude and longitude into a 2D form. The missile requires rerouting if the straight path to the flight intersects the safe 	zone. This is determined by calculating the shortest distance from the safe zone’s center to the missile's path.
 
 Calculaing the shortest distance - 
