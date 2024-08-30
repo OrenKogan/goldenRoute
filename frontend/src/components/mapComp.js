@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import { MapContainer, TileLayer, Marker, Circle, useMap, useMapEvents  } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Circle, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -16,6 +16,12 @@ const redMissleIcon = new L.Icon({
     iconAnchor: [25, 25], // Anchor the icon at its center
 });
 
+const shieldIcon = new L.Icon({
+    iconUrl: '/sheild.png',
+    iconSize: [50, 50], // Size of the icon
+    iconAnchor: [25, 25], // Anchor the icon at its center
+});
+
 const MapView = ({ center, zoom }) => {
     const map = useMap();
 
@@ -26,16 +32,21 @@ const MapView = ({ center, zoom }) => {
     return null;
 };
 
-const MapComp = ({ inputs, flightData, onLocationSelect  }) => {
+const MapComp = ({ inputs, flightData, onLocationSelect, shieldData }) => {
     // Coordinates for a location in Israel (e.g., Tel Aviv)
     const { latitude, longitude, radius } = inputs;
 
     const hasValidInput = latitude && longitude;
     const zoom = hasValidInput ? 9 : 2;
-    
+
     const greenPlaneCoordinates = flightData ? {
         lat: flightData.Latitude,
         lng: flightData.Longitude,
+    } : null;
+
+    const sheildCoordinates = shieldData ? {
+        lat: shieldData.s_latitude,
+        lng: shieldData.s_longitude,
     } : null;
 
     const MapClickHandler = () => {
@@ -56,7 +67,7 @@ const MapComp = ({ inputs, flightData, onLocationSelect  }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <MapView center={[latitude, longitude] } zoom={zoom} />
+            <MapView center={[latitude, longitude]} zoom={zoom} />
             <MapClickHandler />
             {hasValidInput && (
                 <>
@@ -73,6 +84,21 @@ const MapComp = ({ inputs, flightData, onLocationSelect  }) => {
                             position={greenPlaneCoordinates}
                             icon={greenPlaneIcon}
                         />
+                    )}
+                    {sheildCoordinates && sheildCoordinates.lat && sheildCoordinates.lng && shieldData.s_radius && (
+                        <>
+                            <Marker
+                                position={sheildCoordinates}
+                                icon={shieldIcon}
+                            />
+                            <Circle
+                                center={[shieldData.s_latitude, shieldData.s_longitude]}
+                                radius={shieldData.s_radius * 1000} // Convert kilometers to meters
+                                color="green"
+                                fillColor="green"
+                                fillOpacity={0.2} // 20% transparent
+                            />
+                        </>
                     )}
                 </>
             )}
