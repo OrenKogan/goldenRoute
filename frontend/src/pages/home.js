@@ -55,20 +55,21 @@ const Home = ({inputs, setInputs, flightData, setFlightData, timeUntilContact, s
                     }
 
                     const data = await response.json();
-                    setFlightData(formatFlightData(data));
+                    const curr_flightData = formatFlightData(data);
+                    setFlightData(curr_flightData);
                     const timeResponse = await fetch('http://localhost:1212/api/smartTimeCalc', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            flightLat: parseFloat(flightData.Latitude),
-                            flightLon: parseFloat(flightData.Longitude),
-                            flightSpeed: flightData.Speed,
+                            flightLat: parseFloat(curr_flightData.Latitude),
+                            flightLon: parseFloat(curr_flightData.Longitude),
+                            flightSpeed: curr_flightData.Speed,
                             missileLat: parseFloat(latitude),
                             missileLon: parseFloat(longitude),
                             missileSpeed: speed,
-                            trueDiraction: flightData.TrueDirection
+                            trueDiraction: curr_flightData.TrueDirection
                         }),
                     });
 

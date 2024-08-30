@@ -54,9 +54,9 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
                             flightLon: parseFloat(curr_flightData.Longitude),
                             missileLat: parseFloat(latitude),
                             missileLon: parseFloat(longitude),
-                            safeLat: shieldData.s_latitude,
-                            safeLon: shieldData.s_longitude,
-                            safeRadius: shieldData.s_radius
+                            safeLat: shieldData ? shieldData.s_latitude ? shieldData.s_latitude : null : null,
+                            safeLon: shieldData ? shieldData.s_longitude ? shieldData.s_longitude : null : null,
+                            safeRadius: shieldData ? shieldData.s_radius ? shieldData.s_radius : null : null
                         }),
                     });
 

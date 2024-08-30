@@ -111,6 +111,8 @@ function needForReRoute(cX, cY, mX, mY, fX,fY, r){
 function calcDis(cX, cY, mX, mY, fX,fY, r){
 
     c = distance2D(mX, mY, fX, fY);
+    if (!cX || !cY )
+        return {status: "success", distance: c};
     b = distance2D(cX, cY, fX, fY);
     a = distance2D(mX, mY, cX, cY);
     if (b < r)
