@@ -46,8 +46,10 @@ This application utilizes the OpenSky API to retrieve flights within the missile
 The nearest airport information is obtained via the OpenAIP API.
 
 **Bonuses**
-BONUS 1: Time Calculation for Missile-Flight Intersection
-	We are solving for T, the time when the missile and a friendly flight will intersect. The known parameters are:
+**BONUS 1: Time Calculation for Missile-Flight Intersection**
+
+We are solving for T, the time when the missile and a friendly flight will intersect. We convert latitude and longitude into a 2D form
+The known parameters are:
 	
 	V: Speed of the friendly flight
 	U: Speed of the enemy missile
@@ -61,7 +63,7 @@ BONUS 1: Time Calculation for Missile-Flight Intersection
   	we will define Xp and Yp as the coordinates of the contact point
 
 	alpha - the angle between the flight path and the x axis. 
- 	alpha = 90 - trueDiraction
+ 	alpha = 90 - trueDirection
   
 	using flight info
 		Xp = fX + V * T * cos(alpha)
@@ -89,7 +91,7 @@ BONUS 1: Time Calculation for Missile-Flight Intersection
 
    		*reminder => sin(angle) ** 2 + cos(angle) ** 2 = 1
 
-  		therefor =>
+  		therefore =>
 		fX ** 2 + fY ** 2 + 2 * V * T * (fX * cos(alpha) + fY * sin (alpha)) + (V * T) ** 2 = (U * T ) ** 2
 
 		now that we have a more simplified equestion we will tranform the equstion to a standart quadratic formula to solve for T => ax ** 2 + bx + c
@@ -98,7 +100,7 @@ BONUS 1: Time Calculation for Missile-Flight Intersection
 
  		now we can just use the standard quadratic function to find T.
 
-   		because we rasied the equasion to the power of two we might get an additional false answer, therefor we pick the smallest valid one.
+   		because we rasied the equasion to the power of two we might get an additional false answer, therefore we pick the smallest valid one.
 
 **BONUS 2: Missile Rerouting to Avoid a Safe Zone**
 
@@ -109,7 +111,7 @@ Calculaing the shortest distance -
  		for this we will find two tangent to the safe zone, one from the missile and one from the flight.
 
 		here is an illustration for easier understanding - 
-![image](https://github.com/user-attachments/assets/af25de27-5328-4839-82d7-7b55f0c41417)
+![image](https://github.com/user-attachments/assets/c226f2bb-bc0d-45b5-825f-8f3e57a4e39f)
   
       		first we find a, b and c using distance between two points formula.
 		then using the pitagoras formula we find k and n.
