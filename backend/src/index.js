@@ -1,7 +1,7 @@
 const express = require('express');
 const geolib = require('geolib');
 const { saveAttackData, FetchAttackData, FetchFriendlyData } = require('./DatabaseComminicator.js');
-const CalculateTime = require('./Calculator.js');
+const {CalculateTime, getBestDistance} = require('./Calculator.js');
 const app = express();
 const openaipAPI = "ef8bfd4669b7d18735a6f0b44fd42d55"
 
@@ -81,6 +81,7 @@ app.post('/api/calculate', async (req, res) => {
     try {
         const response = await fetch(url);
         if (!response.ok) {
+            console.log(response);
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
@@ -120,14 +121,19 @@ app.post('/api/time-until-contact', (req, res) => {
 app.post('/api/smartTimeCalc', (req, res) => {
     const { flightLat, flightLon, flightSpeed, missileLat, missileLon, missileSpeed, trueDiraction } = req.body;
 
-    time_res = CalculateTime(flightLat, flightLon, missileLat, missileLon, flightSpeed, Number(missileSpeed), trueDiraction);
+    try{
 
-    if (time_res.status == "failed"){
-        res.status(500).json({erros: time_res.errors});
+        time_res = CalculateTime(flightLat, flightLon, missileLat, missileLon, flightSpeed, Number(missileSpeed), trueDiraction);
+    
+        if (time_res.status == "failed")
+            res.status(500).json({erros: time_res.errors});
+        else
+            res.json(time_res);
     }
-
-    console.log(time_res);
-    res.json(time_res);
+    catch (error) {
+        console.error('Error get time:', error);
+        res.status(500).json({ error: 'Failed to get time.' });
+    }
 });
 
 app.post('/api/saveAttack', async (req, res) => {
@@ -149,11 +155,11 @@ app.post('/api/saveAttack', async (req, res) => {
 app.get('/api/FetchAttacks', async (req, res) => {
     try {
         const result = await FetchAttackData();
-        if (result.success) {
+        if (result.success) 
             res.status(200).json(result.data);
-        } else {
+        else
             res.status(500).json({ error: result.errors });
-        }
+        
     } catch (error) {
         console.error('Error saving Attack:', error);
         res.status(500).json({ error: 'Failed to to save attack.' });
@@ -172,6 +178,27 @@ app.post('/api/FetchFriendlyOfAttack', async (req, res) => {
     } catch (error) {
         console.error('Error fetching friendly info:', error);
         res.status(500).json({ error: 'Failed to to fetch friendly info.' });
+    }
+});
+
+app.post('/api/BestDistance', (req, res) => {
+    const { flightLat, flightLon, missileLat, missileLon, safeLat, safeLon, safeRadius } = req.body;
+
+    try {
+
+        dis = getBestDistance(safeLat, safeLon,  missileLat, missileLon,flightLat, flightLon,safeRadius * 1000);
+    
+        console.log(dis);
+        if (dis.status == "failed")
+            res.status(500).json({error: dis.error});
+        else
+            res.json(dis);
+        
+    
+    }
+    catch (error) {
+        console.error('Error get distance:', error);
+        res.status(500).json({ error: 'Failed to get distance.' });
     }
 });
 

@@ -3,10 +3,10 @@ import { styled } from '@mui/material';
 
 // Define the styled PopupContainer
 const PopupContainer = styled('div')({
-    position: 'fixed',
-    top: '10%',
-    left: '50%',
-    transform: 'translateX(-50%)', // Offset to truly center horizontally
+    // position: 'fixed',
+    // top: '20%',
+    // left: '50%',
+    // transform: 'translateX(-50%)', // Offset to truly center horizontally
     width: '300px',
     padding: '20px',
     backgroundColor: '#ffcccc', // Light red background to indicate warning
@@ -28,17 +28,6 @@ const PopupText = styled('p')({
     margin: '5px 0',
     fontSize: '1.5rem',
 });
-
-// const formatTime = (timeInHours) => {
-//     if (timeInHours < 1) {
-//         const minutes = Math.round(timeInHours * 60);
-//         return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
-//     } else {
-//         const hours = Math.floor(timeInHours);
-//         const minutes = Math.round((timeInHours - hours) * 60);
-//         return `${hours} hour${hours !== 1 ? 's' : ''}${minutes > 0 ? ` and ${minutes} minute${minutes !== 1 ? 's' : ''}` : ''}`;
-//     }
-// };
 
 const formatTime = (timeInSeconds) => {
     if (timeInSeconds === -1)

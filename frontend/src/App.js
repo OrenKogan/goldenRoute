@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SafeZone from './pages/safeZone';
 
 const formatFlightData = (data) => {
-    console.log(data);
     let flightData = {}
     flightData.ICAO24 = data[0];
     flightData.Callsign = data[1].trim();
@@ -17,7 +16,6 @@ const formatFlightData = (data) => {
     flightData.Speed = data[9];
     flightData.TrueDirection = data[10];
 
-    console.log(flightData);
     return flightData;
 }
 

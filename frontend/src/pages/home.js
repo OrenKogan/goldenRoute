@@ -205,7 +205,9 @@ const Home = ({inputs, setInputs, flightData, setFlightData, timeUntilContact, s
                     </ul>
                 </div>
             )}
-            <TimeUntilContactPopup timeUntilContact={timeUntilContact} />
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', position: 'absolute', top: '12%', }} >
+                <TimeUntilContactPopup timeUntilContact={timeUntilContact} />
+            </div>
             <MapComp inputs={inputs} flightData={flightData} onLocationSelect={handleLocationSelect} />
             <DataModal isOpen={isFetchOpen} attacksData={attacksData} closeHandle={HandleFetchBtnClick} setFlightData={handleAttackDataHover} setAttack={handleLoadAttack} />
             <FlightInfoPopup flightData={flightData} />
