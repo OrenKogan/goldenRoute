@@ -50,7 +50,7 @@ const AttackInputs = ({ onInputChange, handleButton }) => {
     }));
 
     const _style = {
-        backgroundColor: 'rgba(128, 128, 128, 0.5)', // Grayish with some opacity
+        backgroundColor: 'rgba(139, 0, 0, 0.2)', // Grayish with some opacity
     };
 
     const handleInputChange = (event, setter) => {
@@ -91,7 +91,7 @@ const AttackInputs = ({ onInputChange, handleButton }) => {
             <TextField
                 style={_style}
                 id="speed"
-                label="Speed"
+                label="Speed (m/s)"
                 variant="outlined"
                 value={speed}
                 name="speed"
@@ -102,7 +102,7 @@ const AttackInputs = ({ onInputChange, handleButton }) => {
             <TextField
                 style={_style}
                 id="radius"
-                label="Radius"
+                label="Radius (km)"
                 variant="outlined"
                 value={radius}
                 name="radius"

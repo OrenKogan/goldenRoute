@@ -49,7 +49,7 @@ const SafeZoneInputs = ({ setShieldData }) => {
     }));
 
     const _style = {
-        backgroundColor: 'rgba(128, 128, 128, 0.5)', // Grayish with some opacity
+        backgroundColor: 'rgba(34, 139, 34, 0.2)', //rgba(128, 128, 128, 0.5)', // Grayish with some opacity
     };
 
     const handleInputChange = (event, setter) => {
@@ -76,6 +76,7 @@ const SafeZoneInputs = ({ setShieldData }) => {
                 onChange={(e) => handleInputChange(e, setLatitude)}
                 error={!!errors.s_latitude}
                 helperText={errors.s_latitude && <CustomHelperText>{errors.s_latitude}</CustomHelperText>}
+                
             />
             <TextField
                 style={_style}
@@ -91,7 +92,7 @@ const SafeZoneInputs = ({ setShieldData }) => {
             <TextField
                 style={_style}
                 id="radius"
-                label="Radius"
+                label="Radius (km)"
                 variant="outlined"
                 value={radius}
                 name="s_radius"
