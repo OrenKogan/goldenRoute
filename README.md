@@ -1,63 +1,60 @@
-Welcome to my submition for the Golden Route riddle, 
+Golden Route Riddle Submission
 
- 	the app is used to find the nearest threat to a missile, you will input the information of the enemy missile and will recieve the following info about the nearest flight in danger -
-  		ICAO24, Callsign, Origin Country, Last Contact, On Ground, Closest Airport
+	Welcome to my submission for the Golden Route Riddle. This application is designed to identify the nearest threat to a missile by processing input data about the enemy missile and providing details about the 	closest endangered flight, including:
 
-Running the app - 
+	- ICAO24
+	- Callsign
+	- Origin Country
+	- Last Contact
+	- On Ground Status
+	- Closest Airport
+ 
+**Running the Application**
+To get started with the app, navigate to the base directory of the project and run the following command:
 
-	to run the app you simply run the next command on the base folder of the project - 
-		docker compose up --build
-    	then go into the browser and open up - 
-        	localhost:3000
+  	docker compose up --build
+Then, open your browser and go to:
 
-Working with The Attack Predictor - 
+	localhost:3000
 
-    when opening the app you will see - 
-		4 input fields for each vaiable needed to predict an attack
-  			Latitude - Latitude of the missile
-	 		Longitude - Longitude of the missile
-			Speed - Speed of the missile in m/s
-   			Radius - Radius of missile in km
-	  	2 buttons - 
-			Save Attack - saves to the database
-   			Load Attack - opens a data table with saved attack
-	  					  	you are able to hover over a specific row to see the data of the flight in danger
-		   
-	**to select a location for the missile you are also abale to simply click on the desired location on the map and set the speed and radius using the input fields**
-	 
-**How to use the app to find the best path for the missile while avoiding a certain safe zone?**  (backend BONUS 2)
-	for this you will need to navigate using the url to  localhost:3000/safeZone
+**Working with the Attack Predictor
+**	Upon opening the app, you'll encounter the Attack Predictor interface with:
+	
+	4 Input Fields for enemy missile data:
+		Latitude: Latitude of the missile
+		Longitude: Longitude of the missile
+		Speed: Speed of the missile in m/s
+		Radius: Radius of the missile in km
+	2 Buttons:
+		Save Attack: Saves the attack data to the database.
+		Load Attack: Loads a data table with saved attacks, allowing you to hover over rows to view the flight data of those in danger.
+**Tip**: You can also select a missile location by clicking on the map and then entering the speed and radius using the input fields.
 
-   **when opening this page you will see -**
+**Finding the Best Path for the Missile** (Backend BONUS 2)
+To calculate the best path for the missile while avoiding a designated safe zone, navigate to:
 
-	 	7 input fields -
-   			top 4 - 
-				Latitude - Latitude of the missile
-		 		Longitude - Longitude of the missile
-				Speed - Speed of the missile in m/s
-	   			Radius - Radius of missile in km
-	   		bottom 3 -
-				Latitude - Latitude of the safe zone
-		 		Longitude - Longitude of the safe zone
-	   			Radius - Radius of safe zone in km
+	localhost:3000/safeZone
 
-**where do the flight come from?**
-	i am using the open-sky API to get the flights in the range of the missile.
-	also, to get the nearest airport i am using openaip API.
+ Here, you'll find:
 
-	  		
-******** BONUSES ******
+	7 Input Fields:
+		Top 4: Missile data (Latitude, Longitude, Speed, Radius)
+	Bottom 3: Safe zone data (Latitude, Longitude, Radius)
+ 
+**Flight Data Sources**
+This application utilizes the OpenSky API to retrieve flights within the missile's range. 
+The nearest airport information is obtained via the OpenAIP API.
 
-**BONUS 1**
-
- 	we are serching for T
-	our known parameters are =>
- 		V - speed of friendly flight
-   		U - speed of enemy missile 
-	 	fX, fY  - coordinates of freindly flight
-   		mX, mY - coordinates of enemy missile
-	 	trueDiraction - the angle of the flight from the north/ angle from the y axis to flight path
-   
+**Bonuses**
+BONUS 1: Time Calculation for Missile-Flight Intersection
+	We are solving for T, the time when the missile and a friendly flight will intersect. The known parameters are:
+	
+	V: Speed of the friendly flight
+	U: Speed of the enemy missile
+	fX, fY: Coordinates of the friendly flight
+	mX, mY: Coordinates of the enemy missile
+	trueDirection: The angle of the flight from the north (angle from the y-axis to the flight path)
+ 
 	to find the time we will compare the equsions for the contact point of the missile and the flight 
 
 	we will use the coordinates of the missile as (0, 0) for easier calculation. For this we will need to subtruct the missile coordinates from the flight coordinates for accurate result.
@@ -102,15 +99,13 @@ Working with The Attack Predictor -
  		now we can just use the standard quadratic function to find T.
 
    		because we rasied the equasion to the power of two we might get an additional false answer, therefor we pick the smallest valid one.
-  		
 
-**BONUS 2**
+BONUS 2: Missile Rerouting to Avoid a Safe Zone
 
- 	for this part we will consider the friendly flight as stationary, we will also convert the latitude and longitude into a 2 dimantional form to be able to solve the problem.
-  	first we check if the friendly flight is inside of the safe zone, if so than the missile will not be able to hit it. same follows if the missile it self is in the safe zone.
-   	next we check if there is a need for rerouting, the missile will need rerouting if the straight line from the missile to the flight goes through the safe zone. we check this using the distance of a point 	from a straight line formula.if the distance from the middle of the safe zone to the line between the missile and flight bigger than the radius than there is no need for rerouting.
+	For rerouting, the friendly flight is considered stationary, and we convert latitude and longitude into a 2D form. The missile requires rerouting if the straight path to the flight intersects the safe 	zone. This is determined by calculating the shortest distance from the safe zone’s center to the missile's path.
 
-	Calculaing the shortest distance - 
+Calculaing the shortest distance - 
+
  		for this we will find two tangent to the safe zone, one from the missile and one from the flight.
 
 		here is an illustration for easier understanding - 
@@ -127,4 +122,4 @@ Working with The Attack Predictor -
 
   		finally once adding 2 * x + k + n we get the shortest distanation that the missile need to travel.
 
-	
+
