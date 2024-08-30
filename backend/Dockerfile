@@ -9,6 +9,8 @@ RUN npm install
 COPY . .
 
 COPY wait-for-db.sh /wait-for-db.sh
+
+RUN dos2unix /wait-for-db.sh
 RUN chmod +x /wait-for-db.sh
 
 RUN npx prisma generate
