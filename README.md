@@ -40,6 +40,8 @@ To calculate the best path for the missile while avoiding a designated safe zone
 	7 Input Fields:
 		Top 4: Missile data (Latitude, Longitude, Speed, Radius)
 	Bottom 3: Safe zone data (Latitude, Longitude, Radius)
+
+  	Red inputs are for the enemy missile, green for the safe zone 
  
 **Flight Data Sources**
 This application utilizes the OpenSky API to retrieve flights within the missile's range. 
