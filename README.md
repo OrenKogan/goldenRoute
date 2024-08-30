@@ -17,8 +17,8 @@ Then, open your browser and go to:
 
 	localhost:3000
 
-**Working with the Attack Predictor
-**	Upon opening the app, you'll encounter the Attack Predictor interface with:
+**Working with the Attack Predictor**	
+Upon opening the app, you'll encounter the Attack Predictor interface with:
 	
 	4 Input Fields for enemy missile data:
 		Latitude: Latitude of the missile
@@ -79,14 +79,14 @@ The known parameters are:
 		fX + V * T * cos(alpha) = U * T * cos(beta)
   		fY + V * T * sin(alpha) = U * T * sin(beta)
 
- 	we will raise both equstion to the power of 2 to get rid of beta angle in the next step
+ 	we will raise both equation to the power of 2 to get rid of beta angle in the next step
   		fX ** 2 + 2 * fX * V * T * cos(alpha) + V ** 2 * T ** 2 * cos(alpha) ** 2 = U ** 2 * T ** 2 * cos(beta) ** 2
 		fY ** 2 + 2 * fY * V * T * sin(alpha) + V ** 2 * T ** 2 * sin(alpha) ** 2 = U ** 2 * T ** 2 * sin(beta) ** 2
 
-  	now we will add both equstions to each other 
+  	now we will add both equations to each other 
    		fX ** 2 + fY ** 2 + 2 * fX * V * T * cos(alpha) + 2 * fY * V * T * sin(alpha) + V ** 2 * T ** 2 * cos(alpha) ** 2  + V ** 2 * T ** 2 * sin(alpha) ** 2 =  U ** 2 * T ** 2 * cos(beta) ** 2 + U ** 2 * T ** 2 * sin(beta) ** 2
 
-  	now lets simplify the equstions - 
+  	now lets simplify the equations - 
    		fX ** 2 + fY ** 2 + 2 * V * T * (fX * cos(alpha) + fY * sin (alpha)) + V ** 2 * T ** 2 * (cos(alpha) ** 2 + sin(alpha) ** 2) = U ** 2 * T ** 2 * (cos(beta) ** 2 + sin(beta) ** 2)
 
    		*reminder => sin(angle) ** 2 + cos(angle) ** 2 = 1
@@ -94,13 +94,13 @@ The known parameters are:
   		therefore =>
 		fX ** 2 + fY ** 2 + 2 * V * T * (fX * cos(alpha) + fY * sin (alpha)) + (V * T) ** 2 = (U * T ) ** 2
 
-		now that we have a more simplified equestion we will tranform the equstion to a standart quadratic formula to solve for T => ax ** 2 + bx + c
+		now that we have a more simplified equestion we will tranform the equation to a standart quadratic formula to solve for T => ax ** 2 + bx + c
 
   		T ** 2 * (V ** 2 - U ** 2) + 2 * V * (fX * cos(alpha) + fY * sin (alpha)) * T + fX ** 2 + fY ** 2 = 0
 
  		now we can just use the standard quadratic function to find T.
 
-   		because we rasied the equasion to the power of two we might get an additional false answer, therefore we pick the smallest valid one.
+   		because we rasied the equation to the power of two we might get an additional false answer, therefore we pick the smallest valid one.
 
 **BONUS 2: Missile Rerouting to Avoid a Safe Zone**
 
