@@ -36,13 +36,11 @@ async function calcNearest(l_lat, l_lon, _radius, flights) {
             minDistance = distance;
         }
     }
-    if (nearestFlight)
-        nearestFlight.push(minDistance / 1000);
     return nearestFlight;
 }
 
 async function getNearestAirport(lat, lon) {
-    const url = `https://api.core.openaip.net/api/airports?limit=1&pos=${lat},${lon}`
+    const url = `https://api.core.openaip.net/api/airports?limit=1&pos=${lat},${lon}&dist=900000`
     try {
         const response = await fetch(url, {
             method: 'GET',
@@ -65,7 +63,6 @@ async function getNearestAirport(lat, lon) {
 
 app.post('/api/calculate', async (req, res) => {
     const { coordinates1, planeSpeed, flightRadius } = req.body;
-    //console.log({ coordinates1, planeSpeed, flightRadius });
 
     if (!coordinates1.lat || !coordinates1.lng) {
         return res.status(400).json({ error: 'Latitude and longitude are required.' });
@@ -98,24 +95,28 @@ app.post('/api/calculate', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch flight data.' });
     }
 
-    //res.json({ message: 'msg from server' });
 });
 
-//deprecated
 app.post('/api/time-until-contact', (req, res) => {
     const { distance, speed } = req.body;
-    console.log({ distance, speed });
 
-    // Validate inputs
-    if (typeof distance !== 'number' || typeof speed !== 'number' || speed <= 0) {
-        return res.status(400).json({ error: 'Invalid distance or speed. Ensure they are numbers and speed is greater than zero.' });
+    try{
+
+        // Validate inputs
+        if (typeof distance !== 'number' || typeof speed !== 'number' || speed <= 0) {
+            return res.status(400).json({ error: 'Invalid distance or speed. Ensure they are numbers and speed is greater than zero.' });
+        }
+    
+        // Calculate time until contact
+        const timeUntilContact = distance / speed; // Time in hours
+    
+        // Send the result
+        res.json({ timeUntilContact });
     }
-
-    // Calculate time until contact
-    const timeUntilContact = distance / speed; // Time in hours
-
-    // Send the result
-    res.json({ timeUntilContact });
+    catch (error) {
+        console.error('Error get time:', error);
+        res.status(500).json({ error: 'Failed to get time.' });
+    }
 });
 
 app.post('/api/smartTimeCalc', (req, res) => {
