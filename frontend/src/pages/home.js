@@ -192,7 +192,7 @@ const Home = ({inputs, setInputs, flightData, setFlightData, timeUntilContact, s
             <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
                 <h1 style={{ margin: '0 20px' }}>Attack Predictor</h1>
                 <div style={{ display: 'flex', gap: '20px', flex: '1 1 auto', justifyContent: 'center', alignItems: 'center' }}>
-                    <AttackInputs onInputChange={handleInputChange} handleButton={handleSaveButtonLogic} />
+                    <AttackInputs inputs={inputs} onInputChange={handleInputChange} handleButton={handleSaveButtonLogic} />
                     <SaveButton onSave={handleSave} style={{ height: '100%' }} disabled={isButtonDisabled} />
                 </div>
                 <LoadButton handleLoad={HandleFetchBtnClick} />

@@ -122,6 +122,7 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', }} >
                     <h1 style={{ margin: '0 20px 0 0' }}>Attack Predictor</h1>
                     <AttackInputs
+                        inputs={inputs}
                         onInputChange={handleInputChange}
                         handleButton={null}
                     />
