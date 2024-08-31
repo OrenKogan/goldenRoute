@@ -37,7 +37,7 @@ const MapComp = ({ inputs, flightData, onLocationSelect, shieldData }) => {
     const { latitude, longitude, radius } = inputs;
 
     const hasValidInput = latitude && longitude;
-    const zoom = hasValidInput ? 8 : 2;
+    const zoom = hasValidInput ? 7 : 2;
 
     const greenPlaneCoordinates = flightData ? {
         lat: flightData.Latitude,

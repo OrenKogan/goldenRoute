@@ -36,6 +36,7 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
                     if (!response.ok) {
                         setFlightData(null);
                         setTime(null);
+                        setTravelDistance(null);
                         throw new Error('Failed to fetch flight data');
                     }
 
@@ -83,7 +84,7 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
 
     useEffect(() => {
         console.log(travelDistance);
-        if (travelDistance && inputs.speed){
+        if (travelDistance && inputs.speed) {
             const fetchTimeUntilContact = async () => {
                 try {
                     const time_res = await fetch('http://localhost:1212/api/time-until-contact', {
@@ -99,6 +100,7 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
 
                     if (!time_res.ok) {
                         setTime(null);
+                        setTravelDistance(null);
                         throw new Error('Failed to fetch time until contact');
                     }
 
@@ -116,7 +118,7 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
     return (
         <div
             style={{ position: 'relative', height: '100vh', width: '100vw', overflow: 'hidden', }}>
-            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 20px',  }} >
+            <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', zIndex: 1000, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 20px', }} >
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', }} >
                     <h1 style={{ margin: '0 20px 0 0' }}>Attack Predictor</h1>
                     <AttackInputs
@@ -124,8 +126,10 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
                         handleButton={null}
                     />
                 </div>
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', }} >
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', position: 'absolute', top: '80%', flexDirection: 'row', gap: '20px', }} >
+                    <DistancePopup distance={travelDistance} />
                     <SafeZoneInputs setShieldData={setShieldData} />
+                    <TimeUntilContactPopup timeUntilContact={timeUntilContact} />
                 </div>
             </div>
             {errorMessages.length > 0 && (
@@ -137,11 +141,7 @@ const SafeZone = ({ inputs, setInputs, flightData, setFlightData, timeUntilConta
                     </ul>
                 </div>
             )}
-            <div
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', position: 'absolute', top: '20%', flexDirection: 'row', gap: '20px', }} >
-                <DistancePopup distance={travelDistance} />
-                <TimeUntilContactPopup timeUntilContact={timeUntilContact} />
-            </div>
+
             <MapComp
                 inputs={inputs}
                 flightData={flightData}
