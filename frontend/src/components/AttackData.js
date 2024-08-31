@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, styled } from '@mui/material';
 
-const AttackInputs = ({ onInputChange, handleButton }) => {
+const AttackInputs = ({ onInputChange, handleButton, inputs }) => {
 
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
@@ -71,7 +71,7 @@ const AttackInputs = ({ onInputChange, handleButton }) => {
                 id="latitude"
                 label="Latitude"
                 variant="outlined"
-                value={latitude}
+                value={inputs.latitude}
                 name="latitude"
                 onChange={(e) => handleInputChange(e, setLatitude)}
                 error={!!errors.latitude}
@@ -82,7 +82,7 @@ const AttackInputs = ({ onInputChange, handleButton }) => {
                 id="longitude"
                 label="Longitude"
                 variant="outlined"
-                value={longitude}
+                value={inputs.longitude}
                 name="longitude"
                 onChange={(e) => handleInputChange(e, setLongitude)}
                 error={!!errors.longitude}
